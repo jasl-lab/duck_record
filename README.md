@@ -7,20 +7,37 @@ Actually it's extract from Active Record.
 ## Usage
 
 ```ruby
+class Person < DuckRecord::Base
+  attribute :name, :string
+  attribute :age, :integer
+
+  validates :name, presence: true
+end
+
+class Comment < DuckRecord::Base
+  attribute :content, :string
+
+  validates :content, presence: true
+end
+
 class Book < DuckRecord::Base
+  has_one :author, class_name: 'Person', validate: true
+  accepts_nested_attributes_for :author
+
+  has_many :comments, validate: true
+  accepts_nested_attributes_for :comments
+
   attribute :title,     :string
+  attribute :tags,      :string,   array:   true
   attribute :price,     :decimal,  default: 0
+  attribute :meta,      :json,     default: {}
   attribute :bought_at, :datetime, default: -> { Time.new } 
 
-  # some types that cheated from PG
-  attribute :tags,      :string,   array:   true
-  attribute :meta,      :json,     default: {}
-  
   validates :title, presence: true
 end
 ```
 
-then use `Book` like a Active Record model,
+then use these models like a Active Record model,
 but remember that can't be persisting!
 
 ## Installation
@@ -46,7 +63,6 @@ $ gem install duck_record
 
 ## TODO
 
-- `has_one`, `has_many`
 - refactor that original design for database
 - update docs
 - add useful methods

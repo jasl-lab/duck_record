@@ -14,6 +14,14 @@ module DuckRecord
   class DangerousAttributeError < DuckRecordError
   end
 
+  # Raised when association is being configured improperly or user tries to use
+  # offset and limit together with
+  # {ActiveRecord::Base.has_many}[rdoc-ref:Associations::ClassMethods#has_many] or
+  # {ActiveRecord::Base.has_and_belongs_to_many}[rdoc-ref:Associations::ClassMethods#has_and_belongs_to_many]
+  # associations.
+  class ConfigurationError < DuckRecordError
+  end
+
   # Raised when unknown attributes are supplied via mass assignment.
   UnknownAttributeError = ActiveModel::UnknownAttributeError
 

@@ -285,6 +285,10 @@ module DuckRecord #:nodoc:
     include DefineCallbacks
     include AttributeMethods
     include Callbacks
+    include Associations
+    include NestedValidateAssociation
+    include NestedAttributes
+    include Reflection
     include Serialization
 
     def persisted?

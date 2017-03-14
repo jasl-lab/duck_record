@@ -14,6 +14,8 @@ module DuckRecord
   autoload :Core
   autoload :Inheritance
   autoload :ModelSchema
+  autoload :NestedAttributes
+  autoload :Reflection
   autoload :Serialization
   autoload :Translation
   autoload :Validations
@@ -21,8 +23,10 @@ module DuckRecord
   eager_autoload do
     autoload :DuckRecordError, 'duck_record/errors'
 
+    autoload :Associations
     autoload :AttributeAssignment
     autoload :AttributeMethods
+    autoload :NestedValidateAssociation
   end
 
   module AttributeMethods
@@ -38,7 +42,9 @@ module DuckRecord
 
   def self.eager_load!
     super
-    ActiveRecord::AttributeMethods.eager_load!
+
+    DuckRecord::Associations.eager_load!
+    DuckRecord::AttributeMethods.eager_load!
   end
 end
 
