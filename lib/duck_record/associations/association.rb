@@ -57,6 +57,7 @@ module DuckRecord
       end
 
       def initialize_attributes(record, attributes = nil) #:nodoc:
+        attributes ||= {}
         record.assign_attributes(attributes)
       end
 

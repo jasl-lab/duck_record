@@ -396,7 +396,6 @@ module DuckRecord
 
         if existing_record
           existing_record.assign_attributes(assignable_attributes)
-          association(association_name).initialize_attributes(existing_record)
         else
           method = "build_#{association_name}"
           if respond_to?(method)
