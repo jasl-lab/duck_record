@@ -1,6 +1,11 @@
 require 'active_model/type'
 
 require 'duck_record/type/internal/abstract_json'
+require 'duck_record/type/internal/timezone'
+
+require 'duck_record/type/date'
+require 'duck_record/type/date_time'
+require 'duck_record/type/time'
 require 'duck_record/type/json'
 
 require 'duck_record/type/array'
@@ -44,9 +49,6 @@ module DuckRecord
     String = ActiveModel::Type::String
     Text = ActiveModel::Type::Text
     UnsignedInteger = ActiveModel::Type::UnsignedInteger
-    DateTime = ActiveModel::Type::DateTime
-    Time = ActiveModel::Type::Time
-    Date = ActiveModel::Type::Date
     Value = ActiveModel::Type::Value
 
     register(:big_integer, Type::BigInteger, override: false)

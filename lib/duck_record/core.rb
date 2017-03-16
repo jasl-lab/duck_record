@@ -7,6 +7,15 @@ module DuckRecord
   module Core
     extend ActiveSupport::Concern
 
+    included do
+      ##
+      # :singleton-method:
+      # Determines whether to use Time.utc (using :utc) or Time.local (using :local) when pulling
+      # dates and times from the database. This is set to :utc by default.
+      mattr_accessor :default_timezone, instance_writer: false
+      self.default_timezone = :utc
+    end
+
     module ClassMethods
       def allocate
         define_attribute_methods
