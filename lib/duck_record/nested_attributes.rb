@@ -363,6 +363,31 @@ module DuckRecord
         end
     end
 
+    # Marks this record to be destroyed as part of the parent's save transaction.
+    # This does _not_ actually destroy the record instantly, rather child record will be destroyed
+    # when <tt>parent.save</tt> is called.
+    #
+    # Only useful if the <tt>:autosave</tt> option on the parent is enabled for this associated model.
+    def mark_for_destruction
+      @marked_for_destruction = true
+    end
+
+    # Returns whether or not this record will be destroyed as part of the parent's save transaction.
+    #
+    # Only useful if the <tt>:autosave</tt> option on the parent is enabled for this associated model.
+    def marked_for_destruction?
+      @marked_for_destruction
+    end
+
+    # Returns ActiveRecord::AutosaveAssociation::marked_for_destruction? It's
+    # used in conjunction with fields_for to build a form element for the
+    # destruction of this association.
+    #
+    # See ActionView::Helpers::FormHelper::fields_for for more info.
+    def _destroy
+      marked_for_destruction?
+    end
+
     private
 
     # Attribute hash keys that should not be assigned as normal attributes.
@@ -447,7 +472,7 @@ module DuckRecord
       check_record_limit!(options[:limit], attributes_collection)
 
       if attributes_collection.is_a? Hash
-        attributes_collection = [attributes_collection]
+        attributes_collection = attributes_collection.values
       end
 
       association = association(association_name)

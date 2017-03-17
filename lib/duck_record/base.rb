@@ -294,6 +294,10 @@ module DuckRecord #:nodoc:
     def persisted?
       false
     end
+
+    def new_record?
+      true
+    end
   end
 
   ActiveSupport.run_load_hooks(:duck_record, Base)
