@@ -15,9 +15,9 @@ module DuckRecord
           DuckRecord::AttributeMethods::AttrNames.set_name_cache safe_name, name
 
           generated_attribute_methods.module_eval <<-STR, __FILE__, __LINE__ + 1
-            def __temp__#{safe_name}=(value)
+            def __temp__#{safe_name}=(value, force_write_readonly: false)
               name = ::DuckRecord::AttributeMethods::AttrNames::ATTR_#{safe_name}
-              write_attribute(name, value)
+              write_attribute(name, value, force_write_readonly: force_write_readonly)
             end
             alias_method #{(name + '=').inspect}, :__temp__#{safe_name}=
             undef_method :__temp__#{safe_name}=
@@ -28,29 +28,31 @@ module DuckRecord
       # Updates the attribute identified by <tt>attr_name</tt> with the
       # specified +value+. Empty strings for Integer and Float columns are
       # turned into +nil+.
-      def write_attribute(attr_name, value)
+      def write_attribute(attr_name, value, force_write_readonly: false)
         name = if self.class.attribute_alias?(attr_name)
-          self.class.attribute_alias(attr_name).to_s
-        else
-          attr_name.to_s
-        end
+                 self.class.attribute_alias(attr_name).to_s
+               else
+                 attr_name.to_s
+               end
 
-        write_attribute_with_type_cast(name, value, true)
+        write_attribute_with_type_cast(name, value, true, force_write_readonly: force_write_readonly)
       end
 
-      def raw_write_attribute(attr_name, value) # :nodoc:
-        write_attribute_with_type_cast(attr_name, value, false)
+      def raw_write_attribute(attr_name, value, force_write_readonly: false) # :nodoc:
+        write_attribute_with_type_cast(attr_name, value, false, force_write_readonly: force_write_readonly)
       end
 
       private
 
       # Handle *= for method_missing.
-      def attribute=(attribute_name, value)
-        write_attribute(attribute_name, value)
+      def attribute=(attribute_name, value, force_write_readonly: false)
+        write_attribute(attribute_name, value, force_write_readonly: force_write_readonly)
       end
 
-      def write_attribute_with_type_cast(attr_name, value, should_type_cast)
+      def write_attribute_with_type_cast(attr_name, value, should_type_cast, force_write_readonly: false)
         attr_name = attr_name.to_s
+
+        return if !force_write_readonly && self.class.readonly_attributes.include?(attr_name)
 
         if should_type_cast
           @attributes.write_from_user(attr_name, value)

@@ -276,6 +276,7 @@ module DuckRecord #:nodoc:
     extend Translation
 
     include Core
+    include ReadonlyAttributes
     include ModelSchema
     include Inheritance
     include AttributeAssignment

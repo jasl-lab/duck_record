@@ -66,7 +66,7 @@ module DuckRecord
       initialize_internals_callback
 
       if attributes
-        assign_attributes(attributes)
+        assign_attributes(attributes, force_write_readonly: true)
         clear_changes_information
       end
 

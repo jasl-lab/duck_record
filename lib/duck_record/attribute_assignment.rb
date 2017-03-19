@@ -1,18 +1,29 @@
+require 'active_support/core_ext/hash/keys'
 require 'active_model/forbidden_attributes_protection'
 
 module DuckRecord
   module AttributeAssignment
     extend ActiveSupport::Concern
-    include ActiveModel::AttributeAssignment
+    include ActiveModel::ForbiddenAttributesProtection
 
     # Alias for ActiveModel::AttributeAssignment#assign_attributes. See ActiveModel::AttributeAssignment.
-    def attributes=(attributes)
-      assign_attributes(attributes)
+    def attributes=(attributes, force_write_readonly: false)
+      assign_attributes(attributes, force_write_readonly: force_write_readonly)
+    end
+
+    def assign_attributes(new_attributes, force_write_readonly: false)
+      unless new_attributes.respond_to?(:stringify_keys)
+        raise ArgumentError, "When assigning attributes, you must pass a hash as an argument."
+      end
+      return if new_attributes.nil? || new_attributes.empty?
+
+      attributes = new_attributes.stringify_keys
+      _assign_attributes(sanitize_for_mass_assignment(attributes), force_write_readonly: force_write_readonly)
     end
 
     private
 
-    def _assign_attributes(attributes)
+    def _assign_attributes(attributes, force_write_readonly: false)
       multi_parameter_attributes  = {}
       nested_parameter_attributes = {}
 
@@ -23,15 +34,23 @@ module DuckRecord
           nested_parameter_attributes[k] = attributes.delete(k)
         end
       end
-      super(attributes)
 
-      assign_nested_parameter_attributes(nested_parameter_attributes) unless nested_parameter_attributes.empty?
-      assign_multiparameter_attributes(multi_parameter_attributes) unless multi_parameter_attributes.empty?
+      attributes.each do |k, v|
+        _assign_attribute(k, v, force_write_readonly: force_write_readonly)
+      end
+
+      unless nested_parameter_attributes.empty?
+        assign_nested_parameter_attributes(nested_parameter_attributes, force_write_readonly: force_write_readonly)
+      end
+
+      unless multi_parameter_attributes.empty?
+        assign_multiparameter_attributes(multi_parameter_attributes, force_write_readonly: force_write_readonly)
+      end
     end
 
     # Assign any deferred nested attributes after the base attributes have been set.
-    def assign_nested_parameter_attributes(pairs)
-      pairs.each { |k, v| _assign_attribute(k, v) }
+    def assign_nested_parameter_attributes(pairs, force_write_readonly: false)
+      pairs.each { |k, v| _assign_attribute(k, v, force_write_readonly: force_write_readonly) }
     end
 
     # Instantiates objects for all attribute classes that needs more than one constructor parameter. This is done
@@ -40,13 +59,14 @@ module DuckRecord
     # written_on (a date type) with Date.new("2004", "6", "24"). You can also specify a typecast character in the
     # parentheses to have the parameters typecasted before they're used in the constructor. Use i for Integer and
     # f for Float. If all the values for a given attribute are empty, the attribute will be set to +nil+.
-    def assign_multiparameter_attributes(pairs)
+    def assign_multiparameter_attributes(pairs, force_write_readonly: false)
       execute_callstack_for_multiparameter_attributes(
-        extract_callstack_for_multiparameter_attributes(pairs)
+        extract_callstack_for_multiparameter_attributes(pairs),
+        force_write_readonly: force_write_readonly
       )
     end
 
-    def execute_callstack_for_multiparameter_attributes(callstack)
+    def execute_callstack_for_multiparameter_attributes(callstack, force_write_readonly: false)
       errors = []
       callstack.each do |name, values_with_empty_parameters|
         begin
@@ -55,7 +75,7 @@ module DuckRecord
           else
             values = values_with_empty_parameters
           end
-          send("#{name}=", values)
+          send("#{name}=", values, force_write_readonly: force_write_readonly)
         rescue => ex
           errors << AttributeAssignmentError.new("error on assignment #{values_with_empty_parameters.values.inspect} to #{name} (#{ex.message})", ex, name)
         end
@@ -86,6 +106,14 @@ module DuckRecord
 
     def find_parameter_position(multiparameter_name)
       multiparameter_name.scan(/\(([0-9]*).*\)/).first.first.to_i
+    end
+
+    def _assign_attribute(k, v, force_write_readonly: false)
+      if respond_to?("#{k}=")
+        public_send("#{k}=", v, force_write_readonly: force_write_readonly)
+      else
+        raise UnknownAttributeError.new(self, k)
+      end
     end
   end
 end

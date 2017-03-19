@@ -15,6 +15,7 @@ module DuckRecord
   autoload :Inheritance
   autoload :ModelSchema
   autoload :NestedAttributes
+  autoload :ReadonlyAttributes
   autoload :Reflection
   autoload :Serialization
   autoload :Translation
