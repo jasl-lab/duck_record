@@ -340,27 +340,27 @@ module DuckRecord
 
       private
 
-        # Generates a writer method for this association. Serves as a point for
-        # accessing the objects in the association. For example, this method
-        # could generate the following:
-        #
-        #   def pirate_attributes=(attributes)
-        #     assign_nested_attributes_for_one_to_one_association(:pirate, attributes)
-        #   end
-        #
-        # This redirects the attempts to write objects in an association through
-        # the helper methods defined below. Makes it seem like the nested
-        # associations are just regular associations.
-        def generate_association_writer(association_name, type)
-          generated_association_methods.module_eval <<-eoruby, __FILE__, __LINE__ + 1
-            if method_defined?(:#{association_name}_attributes=)
-              remove_method(:#{association_name}_attributes=)
-            end
-            def #{association_name}_attributes=(attributes)
-              assign_nested_attributes_for_#{type}_association(:#{association_name}, attributes)
-            end
-          eoruby
-        end
+      # Generates a writer method for this association. Serves as a point for
+      # accessing the objects in the association. For example, this method
+      # could generate the following:
+      #
+      #   def pirate_attributes=(attributes)
+      #     assign_nested_attributes_for_one_to_one_association(:pirate, attributes)
+      #   end
+      #
+      # This redirects the attempts to write objects in an association through
+      # the helper methods defined below. Makes it seem like the nested
+      # associations are just regular associations.
+      def generate_association_writer(association_name, type)
+        generated_association_methods.module_eval <<-eoruby, __FILE__, __LINE__ + 1
+          if method_defined?(:#{association_name}_attributes=)
+            remove_method(:#{association_name}_attributes=)
+          end
+          def #{association_name}_attributes=(attributes)
+            assign_nested_attributes_for_#{type}_association(:#{association_name}, attributes)
+          end
+        eoruby
+      end
     end
 
     # Marks this record to be destroyed as part of the parent's save transaction.

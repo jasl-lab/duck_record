@@ -33,6 +33,11 @@ module DuckRecord
         @target = nil
       end
 
+      # Has the \target been already \loaded?
+      def loaded?
+        !!@target
+      end
+
       # Sets the target of this association to <tt>\target</tt>, and the \loaded flag to +true+.
       def target=(target)
         @target = target

@@ -35,16 +35,14 @@ module DuckRecord
                :to_sentence, :to_formatted_s,
                :shuffle, :split, :index, to: :records
 
+      delegate :target, :loaded?, to: :@association
+
       attr_reader :klass
       alias :model :klass
 
       def initialize(klass, association) #:nodoc:
         @klass = klass
         @association = association
-      end
-
-      def target
-        @association.target
       end
 
       ##
