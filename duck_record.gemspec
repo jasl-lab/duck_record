@@ -28,4 +28,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'activemodel',   '~> 5.0'
 
   s.add_development_dependency 'rails', '~> 5.0'
+  s.add_development_dependency 'sqlite3'
 end

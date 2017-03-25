@@ -1,3 +1,5 @@
+require "duck_record/validations/uniqueness_on_real_record"
+
 module DuckRecord
   # = Active Record \Validations
   #
