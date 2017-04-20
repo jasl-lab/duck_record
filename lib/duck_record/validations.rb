@@ -11,7 +11,7 @@ module DuckRecord
   module Validations
     extend ActiveSupport::Concern
     include ActiveModel::Validations
-    
+
     # Runs all the validations within the specified context. Returns +true+ if
     # no errors are found, +false+ otherwise.
     #

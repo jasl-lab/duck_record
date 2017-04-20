@@ -48,7 +48,7 @@ module DuckRecord
       # Workaround for Ruby 2.2 "private attribute?" warning.
       protected
 
-      attr_reader :name, :block, :adapter, :override
+      attr_reader :name, :block, :override
 
       def priority
         result = 0
