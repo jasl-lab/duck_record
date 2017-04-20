@@ -356,7 +356,7 @@ module DuckRecord
           if method_defined?(:#{association_name}_attributes=)
             remove_method(:#{association_name}_attributes=)
           end
-          def #{association_name}_attributes=(attributes)
+          def #{association_name}_attributes=(attributes, _force_write_readonly: false)
             assign_nested_attributes_for_#{type}_association(:#{association_name}, attributes)
           end
         eoruby
