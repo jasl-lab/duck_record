@@ -1,17 +1,21 @@
-require 'active_model/type'
+require "active_model/type"
 
-require 'duck_record/type/internal/abstract_json'
-require 'duck_record/type/internal/timezone'
+require "duck_record/type/internal/abstract_json"
+require "duck_record/type/internal/timezone"
 
-require 'duck_record/type/date'
-require 'duck_record/type/date_time'
-require 'duck_record/type/time'
-require 'duck_record/type/json'
+require "duck_record/type/date"
+require "duck_record/type/date_time"
+require "duck_record/type/time"
+require "duck_record/type/json"
 
-require 'duck_record/type/array'
+require "duck_record/type/array"
 
-require 'duck_record/type/serialized'
-require 'duck_record/type/registry'
+require "duck_record/type/unsigned_integer"
+require "duck_record/type/decimal_without_scale"
+require "duck_record/type/text"
+
+require "duck_record/type/serialized"
+require "duck_record/type/registry"
 
 module DuckRecord
   module Type
@@ -43,15 +47,13 @@ module DuckRecord
     Binary = ActiveModel::Type::Binary
     Boolean = ActiveModel::Type::Boolean
     Decimal = ActiveModel::Type::Decimal
-    DecimalWithoutScale = ActiveModel::Type::DecimalWithoutScale
     Float = ActiveModel::Type::Float
     Integer = ActiveModel::Type::Integer
     String = ActiveModel::Type::String
-    Text = ActiveModel::Type::Text
-    UnsignedInteger = ActiveModel::Type::UnsignedInteger
     Value = ActiveModel::Type::Value
 
     register(:big_integer, Type::BigInteger, override: false)
+    register(:decimal_without_scale)
     register(:binary, Type::Binary, override: false)
     register(:boolean, Type::Boolean, override: false)
     register(:date, Type::Date, override: false)
