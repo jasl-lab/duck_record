@@ -1,7 +1,7 @@
-require 'active_support/core_ext/enumerable'
-require 'active_support/core_ext/string/filters'
-require 'mutex_m'
-require 'concurrent/map'
+require "active_support/core_ext/enumerable"
+require "active_support/core_ext/string/filters"
+require "mutex_m"
+require "concurrent/map"
 
 module DuckRecord
   # = Active Record Attribute Methods
@@ -317,9 +317,9 @@ module DuckRecord
 
     protected
 
-    def attribute_method?(attr_name) # :nodoc:
-      # We check defined? because Syck calls respond_to? before actually calling initialize.
-      defined?(@attributes) && @attributes.key?(attr_name)
-    end
+      def attribute_method?(attr_name) # :nodoc:
+        # We check defined? because Syck calls respond_to? before actually calling initialize.
+        defined?(@attributes) && @attributes.key?(attr_name)
+      end
   end
 end

@@ -64,13 +64,13 @@ module DuckRecord
     # Workaround for Ruby 2.2 "private attribute?" warning.
     protected
 
-    attr_reader :attributes, :forced_changes
+      attr_reader :attributes, :forced_changes
 
     private
 
-    def attr_names
-      attributes.keys
-    end
+      def attr_names
+        attributes.keys
+      end
   end
 
   class NullMutationTracker # :nodoc:

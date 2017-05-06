@@ -1,4 +1,4 @@
-require 'duck_record/attribute'
+require "duck_record/attribute"
 
 module DuckRecord
   class Attribute # :nodoc:
@@ -24,7 +24,7 @@ module DuckRecord
       # Workaround for Ruby 2.2 "private attribute?" warning.
       protected
 
-      attr_reader :user_provided_value
+        attr_reader :user_provided_value
     end
   end
 end

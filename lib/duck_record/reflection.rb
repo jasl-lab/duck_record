@@ -175,9 +175,9 @@ module DuckRecord
 
       private
 
-      def derive_class_name
-        name.to_s.camelize
-      end
+        def derive_class_name
+          name.to_s.camelize
+        end
     end
 
     # Holds all the metadata about an association as it was specified in the
@@ -269,21 +269,21 @@ module DuckRecord
 
       protected
 
-      def actual_source_reflection # FIXME: this is a horrible name
-        self
-      end
+        def actual_source_reflection # FIXME: this is a horrible name
+          self
+        end
 
       private
 
-      def calculate_constructable(macro, options)
-        true
-      end
+        def calculate_constructable(macro, options)
+          true
+        end
 
-      def derive_class_name
-        class_name = name.to_s
-        class_name = class_name.singularize if collection?
-        class_name.camelize
-      end
+        def derive_class_name
+          class_name = name.to_s
+          class_name = class_name.singularize if collection?
+          class_name.camelize
+        end
     end
 
     class HasManyReflection < AssociationReflection # :nodoc:

@@ -17,4 +17,3 @@ module DuckRecord
     end
   end
 end
-

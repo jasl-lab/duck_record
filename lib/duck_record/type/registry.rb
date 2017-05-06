@@ -1,4 +1,4 @@
-require 'active_model/type/registry'
+require "active_model/type/registry"
 
 module DuckRecord
   # :stopdoc:
@@ -10,15 +10,15 @@ module DuckRecord
 
       private
 
-      def registration_klass
-        Registration
-      end
+        def registration_klass
+          Registration
+        end
 
-      def find_registration(symbol, *args)
-        registrations
-          .select { |registration| registration.matches?(symbol, *args) }
-          .max
-      end
+        def find_registration(symbol, *args)
+          registrations
+            .select { |registration| registration.matches?(symbol, *args) }
+            .max
+        end
     end
 
     class Registration
@@ -48,15 +48,15 @@ module DuckRecord
       # Workaround for Ruby 2.2 "private attribute?" warning.
       protected
 
-      attr_reader :name, :block, :override
+        attr_reader :name, :block, :override
 
-      def priority
-        result = 0
-        if override
-          result |= 1
+        def priority
+          result = 0
+          if override
+            result |= 1
+          end
+          result
         end
-        result
-      end
     end
 
     class DecorationRegistration < Registration
@@ -82,15 +82,15 @@ module DuckRecord
       # Workaround for Ruby 2.2 "private attribute?" warning.
       protected
 
-      attr_reader :options, :klass
+        attr_reader :options, :klass
 
       private
 
-      def matches_options?(**kwargs)
-        options.all? do |key, value|
-          kwargs[key] == value
+        def matches_options?(**kwargs)
+          options.all? do |key, value|
+            kwargs[key] == value
+          end
         end
-      end
     end
   end
   # :startdoc:

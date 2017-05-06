@@ -24,13 +24,13 @@ module DuckRecord
 
       private
 
-      def type_cast_array(value, method)
-        if value.is_a?(::Array)
-          value.map { |item| type_cast_array(item, method) }
-        else
-          @subtype.public_send(method, value)
+        def type_cast_array(value, method)
+          if value.is_a?(::Array)
+            value.map { |item| type_cast_array(item, method) }
+          else
+            @subtype.public_send(method, value)
+          end
         end
-      end
     end
   end
 end

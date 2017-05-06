@@ -1,9 +1,9 @@
-require 'active_support'
-require 'active_support/rails'
-require 'active_model'
+require "active_support"
+require "active_support/rails"
+require "active_model"
 
-require 'duck_record/type'
-require 'duck_record/attribute_set'
+require "duck_record/type"
+require "duck_record/attribute_set"
 
 module DuckRecord
   extend ActiveSupport::Autoload
@@ -22,7 +22,7 @@ module DuckRecord
   autoload :Validations
 
   eager_autoload do
-    autoload :DuckRecordError, 'duck_record/errors'
+    autoload :DuckRecordError, "duck_record/errors"
 
     autoload :Associations
     autoload :AttributeAssignment
@@ -50,5 +50,5 @@ module DuckRecord
 end
 
 ActiveSupport.on_load(:i18n) do
-  I18n.load_path << File.dirname(__FILE__) + '/duck_record/locale/en.yml'
+  I18n.load_path << File.dirname(__FILE__) + "/duck_record/locale/en.yml"
 end

@@ -318,7 +318,7 @@ module DuckRecord
     included do
       include ActiveModel::Validations::Callbacks
 
-      define_model_callbacks :initialize, :only => :after
+      define_model_callbacks :initialize, only: :after
     end
   end
 end

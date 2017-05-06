@@ -12,9 +12,9 @@ module DuckRecord
         end
 
         @finder_class = if options[:class_name].present?
-                          @finder_class = options[:class_name].safe_constantize
+                          options[:class_name].safe_constantize
                         elsif options[:class].present? && options[:class].is_a?(Class)
-                          @finder_class = options[:class]
+                          options[:class]
                         else
                           nil
                         end
@@ -59,58 +59,58 @@ module DuckRecord
 
       protected
 
-      def build_relation(klass, table, attribute, value) #:nodoc:
-        if reflection = klass._reflect_on_association(attribute)
-          attribute = reflection.foreign_key
-          value = value.attributes[reflection.klass.primary_key] unless value.nil?
-        end
-
-        # the attribute may be an aliased attribute
-        if klass.attribute_alias?(attribute)
-          attribute = klass.attribute_alias(attribute)
-        end
-
-        attribute_name = attribute.to_s
-
-        column = klass.columns_hash[attribute_name]
-        cast_type = klass.type_for_attribute(attribute_name)
-        value = cast_type.serialize(value)
-        value = klass.connection.type_cast(value)
-
-        comparison = if !options[:case_sensitive] && !value.nil?
-          # will use SQL LOWER function before comparison, unless it detects a case insensitive collation
-          klass.connection.case_insensitive_comparison(table, attribute, column, value)
-        else
-          klass.connection.case_sensitive_comparison(table, attribute, column, value)
-        end
-        if value.nil?
-          klass.unscoped.where(comparison)
-        else
-          bind = ActiveRecord::Relation::QueryAttribute.new(attribute_name, value, ActiveRecord::Type::Value.new)
-          klass.unscoped.where(comparison, bind)
-        end
-      rescue RangeError
-        klass.none
-      end
-
-      def scope_relation(record, table, relation)
-        Array(options[:scope]).each do |scope_item|
-          scope_value = if record.class._reflect_on_association(scope_item)
-            record.association(scope_item).reader
-          else
-            record._read_attribute(scope_item)
+        def build_relation(klass, table, attribute, value) #:nodoc:
+          if reflection = klass._reflect_on_association(attribute)
+            attribute = reflection.foreign_key
+            value = value.attributes[reflection.klass.primary_key] unless value.nil?
           end
-          relation = relation.where(scope_item => scope_value)
+
+          # the attribute may be an aliased attribute
+          if klass.attribute_alias?(attribute)
+            attribute = klass.attribute_alias(attribute)
+          end
+
+          attribute_name = attribute.to_s
+
+          column = klass.columns_hash[attribute_name]
+          cast_type = klass.type_for_attribute(attribute_name)
+          value = cast_type.serialize(value)
+          value = klass.connection.type_cast(value)
+
+          comparison = if !options[:case_sensitive] && !value.nil?
+            # will use SQL LOWER function before comparison, unless it detects a case insensitive collation
+            klass.connection.case_insensitive_comparison(table, attribute, column, value)
+          else
+            klass.connection.case_sensitive_comparison(table, attribute, column, value)
+          end
+          if value.nil?
+            klass.unscoped.where(comparison)
+          else
+            bind = ActiveRecord::Relation::QueryAttribute.new(attribute_name, value, ActiveRecord::Type::Value.new)
+            klass.unscoped.where(comparison, bind)
+          end
+        rescue RangeError
+          klass.none
         end
 
-        relation
-      end
+        def scope_relation(record, table, relation)
+          Array(options[:scope]).each do |scope_item|
+            scope_value = if record.class._reflect_on_association(scope_item)
+              record.association(scope_item).reader
+            else
+              record._read_attribute(scope_item)
+            end
+            relation = relation.where(scope_item => scope_value)
+          end
 
-      def map_enum_attribute(klass, attribute, value)
-        mapping = klass.defined_enums[attribute.to_s]
-        value = mapping[value] if value && mapping
-        value
-      end
+          relation
+        end
+
+        def map_enum_attribute(klass, attribute, value)
+          mapping = klass.defined_enums[attribute.to_s]
+          value = mapping[value] if value && mapping
+          value
+        end
     end
 
     module ClassMethods

@@ -27,13 +27,13 @@ module DuckRecord
 
       private
 
-      def replace(_record)
-        raise NotImplementedError, "Subclasses must implement a replace(record) method"
-      end
+        def replace(_record)
+          raise NotImplementedError, "Subclasses must implement a replace(record) method"
+        end
 
-      def set_new_record(record)
-        replace(record)
-      end
+        def set_new_record(record)
+          replace(record)
+        end
     end
   end
 end

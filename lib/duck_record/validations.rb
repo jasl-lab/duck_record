@@ -31,12 +31,12 @@ module DuckRecord
 
     private
 
-    def default_validation_context
-      :default
-    end
+      def default_validation_context
+        :default
+      end
 
-    def perform_validations(options = {})
-      options[:validate] == false || valid?(options[:context])
-    end
+      def perform_validations(options = {})
+        options[:validate] == false || valid?(options[:context])
+      end
   end
 end

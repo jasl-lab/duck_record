@@ -7,7 +7,6 @@ module DuckRecord
     end
 
     module ClassMethods
-
       def attribute_types # :nodoc:
         load_schema
         @attribute_types ||= Hash.new
@@ -42,19 +41,19 @@ module DuckRecord
 
       private
 
-      def schema_loaded?
-        defined?(@loaded) && @loaded
-      end
-
-      def load_schema
-        unless schema_loaded?
-          load_schema!
+        def schema_loaded?
+          defined?(@loaded) && @loaded
         end
-      end
 
-      def load_schema!
-        @loaded = true
-      end
+        def load_schema
+          unless schema_loaded?
+            load_schema!
+          end
+        end
+
+        def load_schema!
+          @loaded = true
+        end
     end
   end
 end

@@ -1,4 +1,4 @@
-require 'active_support/core_ext/hash/indifferent_access'
+require "active_support/core_ext/hash/indifferent_access"
 
 module DuckRecord
   # == Single table inheritance
@@ -96,35 +96,35 @@ module DuckRecord
 
       protected
 
-      # Returns the class type of the record using the current module as a prefix. So descendants of
-      # MyApp::Business::Account would appear as MyApp::Business::AccountSubclass.
-      def compute_type(type_name)
-        if type_name.start_with?('::'.freeze)
-          # If the type is prefixed with a scope operator then we assume that
-          # the type_name is an absolute reference.
-          ActiveSupport::Dependencies.constantize(type_name)
-        else
-          type_candidate = @_type_candidates_cache[type_name]
-          if type_candidate && type_constant = ActiveSupport::Dependencies.safe_constantize(type_candidate)
-            return type_constant
-          end
-
-          # Build a list of candidates to search for
-          candidates = []
-          name.scan(/::|$/) { candidates.unshift "#{$`}::#{type_name}" }
-          candidates << type_name
-
-          candidates.each do |candidate|
-            constant = ActiveSupport::Dependencies.safe_constantize(candidate)
-            if candidate == constant.to_s
-              @_type_candidates_cache[type_name] = candidate
-              return constant
+        # Returns the class type of the record using the current module as a prefix. So descendants of
+        # MyApp::Business::Account would appear as MyApp::Business::AccountSubclass.
+        def compute_type(type_name)
+          if type_name.start_with?("::".freeze)
+            # If the type is prefixed with a scope operator then we assume that
+            # the type_name is an absolute reference.
+            ActiveSupport::Dependencies.constantize(type_name)
+          else
+            type_candidate = @_type_candidates_cache[type_name]
+            if type_candidate && type_constant = ActiveSupport::Dependencies.safe_constantize(type_candidate)
+              return type_constant
             end
-          end
 
-          raise NameError.new("uninitialized constant #{candidates.first}", candidates.first)
+            # Build a list of candidates to search for
+            candidates = []
+            name.scan(/::|$/) { candidates.unshift "#{$`}::#{type_name}" }
+            candidates << type_name
+
+            candidates.each do |candidate|
+              constant = ActiveSupport::Dependencies.safe_constantize(candidate)
+              if candidate == constant.to_s
+                @_type_candidates_cache[type_name] = candidate
+                return constant
+              end
+            end
+
+            raise NameError.new("uninitialized constant #{candidates.first}", candidates.first)
+          end
         end
-      end
     end
   end
 end

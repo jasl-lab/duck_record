@@ -172,16 +172,16 @@ module DuckRecord
 
       private
 
-      def callback(method, record)
-        callbacks_for(method).each do |callback|
-          callback.call(method, owner, record)
+        def callback(method, record)
+          callbacks_for(method).each do |callback|
+            callback.call(method, owner, record)
+          end
         end
-      end
 
-      def callbacks_for(callback_name)
-        full_callback_name = "#{callback_name}_for_#{reflection.name}"
-        owner.class.send(full_callback_name)
-      end
+        def callbacks_for(callback_name)
+          full_callback_name = "#{callback_name}_for_#{reflection.name}"
+          owner.class.send(full_callback_name)
+        end
     end
   end
 end

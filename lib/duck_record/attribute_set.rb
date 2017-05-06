@@ -1,4 +1,4 @@
-require 'duck_record/attribute_set/yaml_encoder'
+require "duck_record/attribute_set/yaml_encoder"
 
 module DuckRecord
   class AttributeSet # :nodoc:
@@ -87,12 +87,12 @@ module DuckRecord
     # Workaround for Ruby 2.2 "private attribute?" warning.
     protected
 
-    attr_reader :attributes
+      attr_reader :attributes
 
     private
 
-    def initialized_attributes
-      attributes.select { |_, attr| attr.initialized? }
-    end
+      def initialized_attributes
+        attributes.select { |_, attr| attr.initialized? }
+      end
   end
 end

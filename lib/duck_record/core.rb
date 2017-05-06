@@ -1,7 +1,7 @@
-require 'thread'
-require 'active_support/core_ext/hash/indifferent_access'
-require 'active_support/core_ext/object/duplicable'
-require 'active_support/core_ext/string/filters'
+require "thread"
+require "active_support/core_ext/hash/indifferent_access"
+require "active_support/core_ext/object/duplicable"
+require "active_support/core_ext/string/filters"
 
 module DuckRecord
   module Core
@@ -151,7 +151,7 @@ module DuckRecord
     #   coder # => {"attributes" => {"id" => nil, ... }}
     def encode_with(coder)
       self.class.yaml_encoder.encode(@attributes, coder)
-      coder['duck_record_yaml_version'] = 2
+      coder["duck_record_yaml_version"] = 2
     end
 
     # Clone and freeze the attributes hash such that associations are still
@@ -187,9 +187,9 @@ module DuckRecord
           if has_attribute?(name)
             "#{name}: #{attribute_for_inspect(name)}"
           end
-        end.compact.join(', ')
+        end.compact.join(", ")
       else
-        'not initialized'
+        "not initialized"
       end
 
       "#<#{self.class} #{inspection}>"
@@ -201,19 +201,19 @@ module DuckRecord
       return super if custom_inspect_method_defined?
       pp.object_address_group(self) do
         if defined?(@attributes) && @attributes
-          pp.seplist(self.class.attribute_names, proc { pp.text ',' }) do |attribute_name|
+          pp.seplist(self.class.attribute_names, proc { pp.text "," }) do |attribute_name|
             attribute_value = read_attribute(attribute_name)
-            pp.breakable ' '
+            pp.breakable " "
             pp.group(1) do
               pp.text attribute_name
-              pp.text ':'
+              pp.text ":"
               pp.breakable
               pp.pp attribute_value
             end
           end
         else
-          pp.breakable ' '
-          pp.text 'not initialized'
+          pp.breakable " "
+          pp.text "not initialized"
         end
       end
     end
@@ -225,33 +225,33 @@ module DuckRecord
 
     private
 
-    # +Array#flatten+ will call +#to_ary+ (recursively) on each of the elements of
-    # the array, and then rescues from the possible +NoMethodError+. If those elements are
-    # +DuckRecord::Base+'s, then this triggers the various +method_missing+'s that we have,
-    # which significantly impacts upon performance.
-    #
-    # So we can avoid the +method_missing+ hit by explicitly defining +#to_ary+ as +nil+ here.
-    #
-    # See also http://tenderlovemaking.com/2011/06/28/til-its-ok-to-return-nil-from-to_ary.html
-    def to_ary
-      nil
-    end
-
-    def init_internals
-      @readonly = false
-    end
-
-    def initialize_internals_callback
-    end
-
-    def thaw
-      if frozen?
-        @attributes = @attributes.dup
+      # +Array#flatten+ will call +#to_ary+ (recursively) on each of the elements of
+      # the array, and then rescues from the possible +NoMethodError+. If those elements are
+      # +DuckRecord::Base+'s, then this triggers the various +method_missing+'s that we have,
+      # which significantly impacts upon performance.
+      #
+      # So we can avoid the +method_missing+ hit by explicitly defining +#to_ary+ as +nil+ here.
+      #
+      # See also http://tenderlovemaking.com/2011/06/28/til-its-ok-to-return-nil-from-to_ary.html
+      def to_ary
+        nil
       end
-    end
 
-    def custom_inspect_method_defined?
-      self.class.instance_method(:inspect).owner != DuckRecord::Base.instance_method(:inspect).owner
-    end
+      def init_internals
+        @readonly = false
+      end
+
+      def initialize_internals_callback
+      end
+
+      def thaw
+        if frozen?
+          @attributes = @attributes.dup
+        end
+      end
+
+      def custom_inspect_method_defined?
+        self.class.instance_method(:inspect).owner != DuckRecord::Base.instance_method(:inspect).owner
+      end
   end
 end

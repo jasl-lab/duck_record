@@ -66,6 +66,6 @@ module DuckRecord
     register(:time, Type::Time, override: false)
     register(:json, Type::JSON, override: false)
 
-    add_modifier({array: true}, Type::Array)
+    add_modifier({ array: true }, Type::Array)
   end
 end
