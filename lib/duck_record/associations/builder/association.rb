@@ -85,7 +85,8 @@ module DuckRecord::Associations::Builder # :nodoc:
 
     def self.define_writers(mixin, name)
       mixin.class_eval <<-CODE, __FILE__, __LINE__ + 1
-        def #{name}=(value)
+        def #{name}=(value, force_write_readonly: false)
+          return if !force_write_readonly && self.class.readonly_attributes.include?("#{name}")
           association(:#{name}).writer(value)
         end
       CODE

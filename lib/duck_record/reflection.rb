@@ -149,14 +149,14 @@ module DuckRecord
       # <tt>has_many :clients</tt> returns <tt>{}</tt>
       attr_reader :options
 
-      attr_reader :active_record
+      attr_reader :duck_record
 
       attr_reader :plural_name # :nodoc:
 
-      def initialize(name, options, active_record)
+      def initialize(name, options, duck_record)
         @name          = name
         @options       = options
-        @active_record = active_record
+        @duck_record   = duck_record
         @klass         = options[:anonymous_class]
         @plural_name   = name.to_s.pluralize
       end
@@ -200,12 +200,12 @@ module DuckRecord
       end
 
       def compute_class(name)
-        active_record.send(:compute_type, name)
+        duck_record.send(:compute_type, name)
       end
 
       attr_accessor :parent_reflection # Reflection
 
-      def initialize(name, options, active_record)
+      def initialize(name, options, duck_record)
         super
         @constructable = calculate_constructable(macro, options)
 

@@ -40,7 +40,11 @@ module DuckRecord
       end
 
       def build(attributes = {}, &block)
-        if attributes.is_a?(Array)
+        if attributes.is_a?(klass)
+          add_to_target(attributes) do |record|
+            yield(record) if block_given?
+          end
+        elsif attributes.is_a?(Array)
           attributes.collect { |attr| build(attr, &block) }
         else
           add_to_target(build_record(attributes)) do |record|
@@ -53,8 +57,13 @@ module DuckRecord
       # be chained. Since << flattens its argument list and inserts each record,
       # +push+ and +concat+ behave identically.
       def concat(*records)
-        records = records.flatten
-        @target.concat records
+        records.flatten.each do |r|
+          begin
+            build(r)
+          rescue
+            raise_on_type_mismatch!(r)
+          end
+        end
       end
 
       # Removes all records from the association without calling callbacks
@@ -130,7 +139,14 @@ module DuckRecord
       # Replace this collection with +other_array+. This will perform a diff
       # and delete/add only records that have changed.
       def replace(other_array)
-        @target = other_array
+        delete_all
+        other_array.each do |item|
+          begin
+            build(item)
+          rescue
+            raise_on_type_mismatch!(r)
+          end
+        end
       end
 
       def include?(record)

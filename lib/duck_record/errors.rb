@@ -22,6 +22,21 @@ module DuckRecord
   class ConfigurationError < DuckRecordError
   end
 
+  # Raised when an object assigned to an association has an incorrect type.
+  #
+  #   class Ticket < ActiveRecord::Base
+  #     has_many :patches
+  #   end
+  #
+  #   class Patch < ActiveRecord::Base
+  #     belongs_to :ticket
+  #   end
+  #
+  #   # Comments are not patches, this assignment raises AssociationTypeMismatch.
+  #   @ticket.patches << Comment.new(content: "Please attach tests to your patch.")
+  class AssociationTypeMismatch < DuckRecordError
+  end
+
   # Raised when unknown attributes are supplied via mass assignment.
   UnknownAttributeError = ActiveModel::UnknownAttributeError
 
