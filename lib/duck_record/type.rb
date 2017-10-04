@@ -9,6 +9,7 @@ require "duck_record/type/time"
 require "duck_record/type/json"
 
 require "duck_record/type/array"
+require "duck_record/type/array_without_blank"
 
 require "duck_record/type/unsigned_integer"
 require "duck_record/type/decimal_without_scale"
@@ -67,5 +68,6 @@ module DuckRecord
     register(:json, Type::JSON, override: false)
 
     add_modifier({ array: true }, Type::Array)
+    add_modifier({ array_without_blank: true }, Type::ArrayWithoutBlank)
   end
 end

@@ -15,5 +15,18 @@ module DuckRecord #:nodoc:
 
       super(options)
     end
+
+    private
+
+    def read_attribute_for_serialization(key)
+      v = send(key)
+      if v.respond_to?(:to_ary)
+        v.to_ary
+      elsif v.respond_to?(:to_hash)
+        v.to_hash
+      else
+        v
+      end
+    end
   end
 end

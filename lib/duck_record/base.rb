@@ -305,11 +305,12 @@ module DuckRecord #:nodoc:
 
       self.class.reflections.keys.each do |k|
         records = send(k)
-        sub_hash = if records.respond_to?(:to_ary)
-                     records.to_ary.map { |a| a.to_h }
-                   else
-                     records.to_h
-                   end
+        sub_hash =
+          if records.respond_to?(:to_ary)
+            records.to_ary.map { |a| a.to_h }
+          else
+            records.to_h
+          end
 
         if include_empty || sub_hash.any?
           hash[k] = sub_hash

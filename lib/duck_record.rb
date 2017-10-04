@@ -2,6 +2,8 @@ require "active_support"
 require "active_support/rails"
 require "active_model"
 
+require "core_ext/array_without_blank"
+
 require "duck_record/type"
 require "duck_record/attribute_set"
 
