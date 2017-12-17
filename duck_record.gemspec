@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = DuckRecord::VERSION
   s.authors     = ["jasl"]
   s.email       = ["jasl9187@hotmail.com"]
-  s.homepage    = "https://github.com/jasl/duck_record"
+  s.homepage    = "https://github.com/jasl-lab/duck_record"
   s.summary     = "Used for creating virtual models like ActiveType or ModelAttribute does"
   s.description = <<-DESC.strip
     It looks like Active Record and quacks like Active Record, but it can't do persistence or querying,
