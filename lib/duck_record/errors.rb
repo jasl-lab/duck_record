@@ -53,6 +53,10 @@ module DuckRecord
     end
   end
 
+  # Raised when unserialized object's type mismatches one specified for serializable field.
+  class SerializationTypeMismatch < DuckRecordError
+  end
+
   # Raised when there are multiple errors while doing a mass assignment through the
   # {DuckRecord::Base#attributes=}[rdoc-ref:AttributeAssignment#attributes=]
   # method. The exception has an +errors+ property that contains an array of AttributeAssignmentError

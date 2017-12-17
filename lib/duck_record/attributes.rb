@@ -6,8 +6,8 @@ module DuckRecord
     extend ActiveSupport::Concern
 
     included do
-      class_attribute :attributes_to_define, instance_accessor: false # :internal:
-      self.attributes_to_define = {}
+      class_attribute :attributes_to_define_after_schema_loads, instance_accessor: false # :internal:
+      self.attributes_to_define_after_schema_loads = {}
     end
 
     module ClassMethods
@@ -193,9 +193,10 @@ module DuckRecord
       # methods in ActiveModel::Type::Value for more details.
       def attribute(name, cast_type = Type::Value.new, **options)
         name = name.to_s
+        reload_schema_from_cache
 
-        self.attributes_to_define =
-          attributes_to_define.merge(
+        self.attributes_to_define_after_schema_loads =
+          attributes_to_define_after_schema_loads.merge(
             name => [cast_type, options]
           )
       end
@@ -229,7 +230,7 @@ module DuckRecord
 
       def load_schema! # :nodoc:
         super
-        attributes_to_define.each do |name, (type, options)|
+        attributes_to_define_after_schema_loads.each do |name, (type, options)|
           if type.is_a?(Symbol)
             type = DuckRecord::Type.lookup(type, **options.except(:default))
           end

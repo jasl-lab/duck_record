@@ -11,10 +11,13 @@ module DuckRecord
   extend ActiveSupport::Autoload
 
   autoload :Attribute
+  autoload :AttributeDecorators
   autoload :Base
   autoload :Callbacks
   autoload :Core
+  autoload :Enum
   autoload :Inheritance
+  autoload :Persistence
   autoload :ModelSchema
   autoload :NestedAttributes
   autoload :ReadonlyAttributes
@@ -32,6 +35,11 @@ module DuckRecord
     autoload :NestedValidateAssociation
   end
 
+  module Coders
+    autoload :YAMLColumn, "duck_record/coders/yaml_column"
+    autoload :JSON, "duck_record/coders/json"
+  end
+
   module AttributeMethods
     extend ActiveSupport::Autoload
 
@@ -39,6 +47,7 @@ module DuckRecord
       autoload :BeforeTypeCast
       autoload :Dirty
       autoload :Read
+      autoload :Serialization
       autoload :Write
     end
   end

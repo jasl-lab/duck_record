@@ -9,7 +9,7 @@ module DuckRecord
     module ClassMethods
       def attribute_types # :nodoc:
         load_schema
-        @attribute_types ||= Hash.new
+        @attribute_types ||= Hash.new(Type.default_value)
       end
 
       def yaml_encoder # :nodoc:
@@ -42,7 +42,7 @@ module DuckRecord
       private
 
         def schema_loaded?
-          defined?(@loaded) && @loaded
+          defined?(@schema_loaded) && @schema_loaded
         end
 
         def load_schema
@@ -52,7 +52,19 @@ module DuckRecord
         end
 
         def load_schema!
-          @loaded = true
+          @schema_loaded = true
+        end
+
+        def reload_schema_from_cache
+          @attribute_types = nil
+          @default_attributes = nil
+          @attributes_builder = nil
+          @schema_loaded = false
+          @attribute_names = nil
+          @yaml_encoder = nil
+          direct_descendants.each do |descendant|
+            descendant.send(:reload_schema_from_cache)
+          end
         end
     end
   end

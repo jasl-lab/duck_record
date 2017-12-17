@@ -45,7 +45,8 @@ module DuckRecord
         if abstract_class?
           "#{super}(abstract)"
         else
-          super
+          attr_list = attribute_types.map { |name, type| "#{name}: #{type.type}" } * ", "
+          "#{super}(#{attr_list})"
         end
       end
     end

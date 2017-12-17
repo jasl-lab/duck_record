@@ -274,8 +274,10 @@ module DuckRecord #:nodoc:
     extend ActiveSupport::DescendantsTracker
 
     extend Translation
+    extend Enum
 
     include Core
+    include Persistence
     include ReadonlyAttributes
     include ModelSchema
     include Inheritance
@@ -283,6 +285,7 @@ module DuckRecord #:nodoc:
     include ActiveModel::Conversion
     include Validations
     include Attributes
+    include AttributeDecorators
     include DefineCallbacks
     include AttributeMethods
     include Callbacks
@@ -291,14 +294,6 @@ module DuckRecord #:nodoc:
     include NestedAttributes
     include Reflection
     include Serialization
-
-    def persisted?
-      false
-    end
-
-    def new_record?
-      true
-    end
 
     def to_h(include_empty: true)
       hash = serializable_hash
