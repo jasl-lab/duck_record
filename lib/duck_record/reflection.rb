@@ -15,10 +15,10 @@ module DuckRecord
     def self.create(macro, name, options, ar)
       klass = \
         case macro
-        when :has_many
-          HasManyReflection
-        when :has_one
-          HasOneReflection
+        when :embeds_many
+          EmbedsManyReflection
+        when :embeds_one
+          EmbedsOneReflection
         else
           raise "Unsupported Macro: #{macro}"
         end
@@ -182,7 +182,7 @@ module DuckRecord
 
     # Holds all the metadata about an association as it was specified in the
     # Active Record class.
-    class AssociationReflection < MacroReflection #:nodoc:
+    class EmbedsAssociationReflection < MacroReflection #:nodoc:
       # Returns the target association's class.
       #
       #   class Author < ActiveRecord::Base
@@ -286,23 +286,23 @@ module DuckRecord
         end
     end
 
-    class HasManyReflection < AssociationReflection # :nodoc:
-      def macro; :has_many; end
+    class EmbedsManyReflection < EmbedsAssociationReflection # :nodoc:
+      def macro; :embeds_many; end
 
       def collection?; true; end
 
       def association_class
-        Associations::HasManyAssociation
+        Associations::EmbedsManyAssociation
       end
     end
 
-    class HasOneReflection < AssociationReflection # :nodoc:
-      def macro; :has_one; end
+    class EmbedsOneReflection < EmbedsAssociationReflection # :nodoc:
+      def macro; :embeds_one; end
 
       def has_one?; true; end
 
       def association_class
-        Associations::HasOneAssociation
+        Associations::EmbedsOneAssociation
       end
     end
   end

@@ -10,7 +10,7 @@
 #      - HasManyAssociation
 
 module DuckRecord::Associations::Builder # :nodoc:
-  class Association #:nodoc:
+  class EmbedsAssociation #:nodoc:
     class << self
       attr_accessor :extensions
     end
@@ -46,7 +46,7 @@ module DuckRecord::Associations::Builder # :nodoc:
     end
 
     def self.valid_options(options)
-      VALID_OPTIONS + Association.extensions.flat_map(&:valid_options)
+      VALID_OPTIONS + EmbedsAssociation.extensions.flat_map(&:valid_options)
     end
 
     def self.validate_options(options)
@@ -57,7 +57,7 @@ module DuckRecord::Associations::Builder # :nodoc:
     end
 
     def self.define_callbacks(model, reflection)
-      Association.extensions.each do |extension|
+      EmbedsAssociation.extensions.each do |extension|
         extension.build model, reflection
       end
     end

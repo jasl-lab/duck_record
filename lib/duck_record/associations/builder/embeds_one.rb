@@ -1,7 +1,19 @@
 # This class is inherited by the has_one and belongs_to association classes
 
 module DuckRecord::Associations::Builder # :nodoc:
-  class SingularAssociation < Association #:nodoc:
+  class EmbedsOne < EmbedsAssociation #:nodoc:
+    def self.macro
+      :embeds_one
+    end
+
+    def self.define_validations(model, reflection)
+      super
+
+      if reflection.options[:required]
+        model.validates_presence_of reflection.name, message: :required
+      end
+    end
+
     def self.define_accessors(model, reflection)
       super
       mixin = model.generated_association_methods

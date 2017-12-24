@@ -27,7 +27,7 @@ module DuckRecord
     #
     # is computed directly through SQL and does not trigger by itself the
     # instantiation of the actual post records.
-    class CollectionProxy
+    class EmbedsManyProxy
       include Enumerable
 
       delegate :to_xml, :encode_with, :length, :collect, :map, :each, :all?, :include?, :to_ary, :join,

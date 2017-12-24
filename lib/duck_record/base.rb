@@ -294,26 +294,6 @@ module DuckRecord #:nodoc:
     include NestedAttributes
     include Reflection
     include Serialization
-
-    def to_h(include_empty: true)
-      hash = serializable_hash
-
-      self.class.reflections.keys.each do |k|
-        records = send(k)
-        sub_hash =
-          if records.respond_to?(:to_ary)
-            records.to_ary.map { |a| a.to_h }
-          else
-            records.to_h
-          end
-
-        if include_empty || sub_hash.any?
-          hash[k] = sub_hash
-        end
-      end
-
-      hash
-    end
   end
 
   ActiveSupport.run_load_hooks(:duck_record, Base)

@@ -15,7 +15,7 @@ module DuckRecord
     #     CollectionAssociation
     #       HasManyAssociation + ForeignAssociation
     #         HasManyThroughAssociation + ThroughAssociation
-    class Association #:nodoc:
+    class EmbedsAssociation #:nodoc:
       attr_reader :owner, :target, :reflection
 
       delegate :options, to: :reflection

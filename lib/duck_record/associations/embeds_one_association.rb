@@ -1,6 +1,6 @@
 module DuckRecord
   module Associations
-    class SingularAssociation < Association #:nodoc:
+    class EmbedsOneAssociation < EmbedsAssociation #:nodoc:
       # Implements the reader method, e.g. foo.bar for Foo.has_one :bar
       def reader
         target
@@ -27,8 +27,15 @@ module DuckRecord
 
       private
 
-        def replace(_record)
-          raise NotImplementedError, "Subclasses must implement a replace(record) method"
+        def replace(record)
+          self.target =
+            if record.is_a? klass
+              record
+            elsif record.respond_to?(:to_h)
+              build_record(record.to_h)
+            end
+        rescue
+          raise_on_type_mismatch!(record)
         end
 
         def set_new_record(record)

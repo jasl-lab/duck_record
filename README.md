@@ -21,10 +21,10 @@ class Comment < DuckRecord::Base
 end
 
 class Book < DuckRecord::Base
-  has_one :author, class_name: 'Person', validate: true
+  embeds_one :author, class_name: 'Person', validate: true
   accepts_nested_attributes_for :author
 
-  has_many :comments, validate: true
+  embeds_many :comments, validate: true
   accepts_nested_attributes_for :comments
 
   attribute :title,     :string

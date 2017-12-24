@@ -3,11 +3,15 @@
 require "duck_record/associations"
 
 module DuckRecord::Associations::Builder # :nodoc:
-  class CollectionAssociation < Association #:nodoc:
+  class EmbedsMany < EmbedsAssociation #:nodoc:
     CALLBACKS = [:before_add, :after_add]
 
+    def self.macro
+      :embeds_many
+    end
+
     def self.valid_options(options)
-      super + [:before_add, :after_add]
+      super + CALLBACKS
     end
 
     def self.define_callbacks(model, reflection)
