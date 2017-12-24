@@ -63,16 +63,20 @@ module DuckRecord
       self.class.define_attribute_methods
       @attributes = self.class._default_attributes.deep_dup
 
+      disable_attr_readonly!
+
       init_internals
       initialize_internals_callback
 
       if attributes
-        assign_attributes(attributes, force_write_readonly: true)
+        assign_attributes(attributes)
         clear_changes_information
       end
 
       yield self if block_given?
       _run_initialize_callbacks
+
+      enable_attr_readonly!
     end
 
     # Initialize an empty model object from +coder+. +coder+ should be

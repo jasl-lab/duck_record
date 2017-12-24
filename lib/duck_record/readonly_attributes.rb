@@ -3,8 +3,21 @@ module DuckRecord
     extend ActiveSupport::Concern
 
     included do
+      attr_accessor :_attr_readonly_enabled
       class_attribute :_attr_readonly, instance_accessor: false
       self._attr_readonly = []
+    end
+
+    def attr_readonly_enabled?
+      _attr_readonly_enabled
+    end
+
+    def enable_attr_readonly!
+      self._attr_readonly_enabled = true
+    end
+
+    def disable_attr_readonly!
+      self._attr_readonly_enabled = false
     end
 
     module ClassMethods
