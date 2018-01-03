@@ -139,7 +139,7 @@ module DuckRecord
     end
 
     included do
-      Associations::Builder::EmbedsAssociation.extensions << AssociationBuilderExtension
+      Associations::Builder::Association.extensions << AssociationBuilderExtension
       mattr_accessor :index_nested_attribute_errors, instance_writer: false
       self.index_nested_attribute_errors = false
     end

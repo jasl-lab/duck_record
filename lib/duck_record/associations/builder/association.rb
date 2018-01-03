@@ -10,15 +10,15 @@
 #      - HasManyAssociation
 
 module DuckRecord::Associations::Builder # :nodoc:
-  class EmbedsAssociation #:nodoc:
+  class Association #:nodoc:
     class << self
       attr_accessor :extensions
     end
     self.extensions = []
 
-    VALID_OPTIONS = [:class_name, :anonymous_class, :validate] # :nodoc:
+    VALID_OPTIONS = [:class_name, :anonymous_class, :foreign_key, :validate] # :nodoc:
 
-    def self.build(model, name, options, &block)
+    def self.build(model, name, scope, options, &block)
       if model.dangerous_attribute_method?(name)
         raise ArgumentError, "You tried to define an association named #{name} on the model #{model.name}, but " \
                              "this will conflict with a method #{name} already defined by Active Record. " \
@@ -26,19 +26,44 @@ module DuckRecord::Associations::Builder # :nodoc:
       end
 
       extension = define_extensions model, name, &block
-      reflection = create_reflection model, name, options, extension
+      reflection = create_reflection model, name, scope, options, extension
       define_accessors model, reflection
       define_callbacks model, reflection
       define_validations model, reflection
       reflection
     end
 
-    def self.create_reflection(model, name, options, extension = nil)
+    def self.create_reflection(model, name, scope, options, extension = nil)
       raise ArgumentError, "association names must be a Symbol" unless name.kind_of?(Symbol)
+
+      if scope.is_a?(Hash)
+        options = scope
+        scope   = nil
+      end
 
       validate_options(options)
 
-      DuckRecord::Reflection.create(macro, name, options, model)
+      scope = build_scope(scope, extension)
+
+      DuckRecord::Reflection.create(macro, name, scope, options, model)
+    end
+
+    def self.build_scope(scope, extension)
+      new_scope = scope
+
+      if scope && scope.arity == 0
+        new_scope = proc { instance_exec(&scope) }
+      end
+
+      if extension
+        new_scope = wrap_scope new_scope, extension
+      end
+
+      new_scope
+    end
+
+    def self.wrap_scope(scope, _extension)
+      scope
     end
 
     def self.macro
@@ -46,7 +71,7 @@ module DuckRecord::Associations::Builder # :nodoc:
     end
 
     def self.valid_options(options)
-      VALID_OPTIONS + EmbedsAssociation.extensions.flat_map(&:valid_options)
+      VALID_OPTIONS + Association.extensions.flat_map(&:valid_options)
     end
 
     def self.validate_options(options)
@@ -57,7 +82,7 @@ module DuckRecord::Associations::Builder # :nodoc:
     end
 
     def self.define_callbacks(model, reflection)
-      EmbedsAssociation.extensions.each do |extension|
+      Association.extensions.each do |extension|
         extension.build model, reflection
       end
     end
@@ -86,7 +111,10 @@ module DuckRecord::Associations::Builder # :nodoc:
     def self.define_writers(mixin, name)
       mixin.class_eval <<-CODE, __FILE__, __LINE__ + 1
         def #{name}=(value)
-          return if self.class.readonly_attributes.include?("#{name}")
+          if self.class.readonly_attributes.include?("#{name}") && attr_readonly_enabled?
+            return
+          end
+
           association(:#{name}).writer(value)
         end
       CODE
@@ -94,6 +122,11 @@ module DuckRecord::Associations::Builder # :nodoc:
 
     def self.define_validations(model, reflection)
       # noop
+    end
+
+    def self.add_destroy_callbacks(model, reflection)
+      name = reflection.name
+      model.before_destroy lambda { |o| o.association(name).handle_dependency }
     end
   end
 end

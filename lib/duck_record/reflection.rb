@@ -12,7 +12,7 @@ module DuckRecord
       self._reflections = {}
     end
 
-    def self.create(macro, name, options, ar)
+    def self.create(macro, name, scope, options, ar)
       klass = \
         case macro
         when :embeds_many
@@ -23,7 +23,7 @@ module DuckRecord
           raise "Unsupported Macro: #{macro}"
         end
 
-      klass.new(name, options, ar)
+      klass.new(name, scope, options, ar)
     end
 
     def self.add_reflection(ar, name, reflection)
@@ -143,6 +143,8 @@ module DuckRecord
       # <tt>has_many :clients</tt> returns <tt>:clients</tt>
       attr_reader :name
 
+      attr_reader :scope
+
       # Returns the hash of options used for the macro.
       #
       # <tt>composed_of :balance, class_name: 'Money'</tt> returns <tt>{ class_name: "Money" }</tt>
@@ -153,8 +155,9 @@ module DuckRecord
 
       attr_reader :plural_name # :nodoc:
 
-      def initialize(name, options, duck_record)
+      def initialize(name, scope, options, duck_record)
         @name          = name
+        @scope         = scope
         @options       = options
         @duck_record   = duck_record
         @klass         = options[:anonymous_class]
@@ -171,6 +174,16 @@ module DuckRecord
 
       def compute_class(name)
         name.constantize
+      end
+
+      # Returns +true+ if +self+ and +other_aggregation+ have the same +name+ attribute, +active_record+ attribute,
+      # and +other_aggregation+ has an options hash assigned to it.
+      def ==(other_aggregation)
+        super ||
+          other_aggregation.kind_of?(self.class) &&
+            name == other_aggregation.name &&
+            !other_aggregation.options.nil? &&
+            active_record == other_aggregation.active_record
       end
 
       private
@@ -205,7 +218,7 @@ module DuckRecord
 
       attr_accessor :parent_reflection # Reflection
 
-      def initialize(name, options, duck_record)
+      def initialize(name, scope, options, duck_record)
         super
         @constructable = calculate_constructable(macro, options)
 
