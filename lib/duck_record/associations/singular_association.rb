@@ -47,9 +47,7 @@ module DuckRecord
           end
 
           binds = ActiveRecord::Associations::AssociationScope.get_bind_values(owner, reflection.chain)
-          sc.execute(binds, klass, conn) do |record|
-            set_inverse_instance record
-          end.first
+          sc.execute(binds, klass, conn).first
         rescue ::RangeError
           nil
         end

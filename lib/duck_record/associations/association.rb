@@ -188,7 +188,7 @@ module DuckRecord
       private
 
         def find_target?
-          !loaded? && (!owner.new_record? || foreign_key_present?) && klass
+          !loaded? && foreign_key_present? && klass
         end
 
         def creation_attributes

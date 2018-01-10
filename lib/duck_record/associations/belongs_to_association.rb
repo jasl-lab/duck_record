@@ -2,10 +2,6 @@ module DuckRecord
   # = Active Record Belongs To Association
   module Associations
     class BelongsToAssociation < SingularAssociation #:nodoc:
-      def handle_dependency
-        target.send(options[:dependent]) if load_target
-      end
-
       def replace(record)
         if record
           raise_on_type_mismatch!(record)

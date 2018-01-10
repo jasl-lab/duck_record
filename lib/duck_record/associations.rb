@@ -26,6 +26,8 @@ module DuckRecord
 
     autoload :Association
     autoload :SingularAssociation
+    autoload :ForeignAssociation
+    autoload :ThroughAssociation
 
     module Builder #:nodoc:
       autoload :Association,           "duck_record/associations/builder/association"
@@ -36,6 +38,7 @@ module DuckRecord
       autoload :EmbedsMany, "duck_record/associations/builder/embeds_many"
 
       autoload :BelongsTo, "duck_record/associations/builder/belongs_to"
+      autoload :HasOne,    "duck_record/associations/builder/has_one"
     end
 
     eager_autoload do
@@ -43,6 +46,8 @@ module DuckRecord
       autoload :EmbedsOneAssociation
 
       autoload :BelongsToAssociation
+      autoload :HasOneAssociation
+      autoload :HasOneThroughAssociation
     end
 
     # Returns the association instance for the given name, instantiating it if it doesn't already exist
@@ -103,6 +108,11 @@ module DuckRecord
 
         def belongs_to(name, scope = nil, options = {})
           reflection = Builder::BelongsTo.build(self, name, scope, options)
+          Reflection.add_reflection self, name, reflection
+        end
+
+        def has_one(name, scope = nil, options = {})
+          reflection = Builder::HasOne.build(self, name, scope, options)
           Reflection.add_reflection self, name, reflection
         end
       end

@@ -5,12 +5,12 @@ module DuckRecord::Associations::Builder # :nodoc:
     end
 
     def self.valid_options(_options)
-      super + [:polymorphic, :optional, :default]
+      super + [:optional, :default]
     end
 
     def self.define_callbacks(model, reflection)
       super
-      add_default_callbacks(model, reflection)       if reflection.options[:default]
+      add_default_callbacks(model, reflection) if reflection.options[:default]
     end
 
     def self.define_accessors(mixin, reflection)
@@ -21,10 +21,6 @@ module DuckRecord::Associations::Builder # :nodoc:
       model.before_validation lambda { |o|
         o.association(reflection.name).default(&reflection.options[:default])
       }
-    end
-
-    def self.add_destroy_callbacks(model, reflection)
-      model.after_destroy lambda { |o| o.association(reflection.name).handle_dependency }
     end
 
     def self.define_validations(model, reflection)

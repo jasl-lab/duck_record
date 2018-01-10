@@ -1,6 +1,10 @@
 # This class is inherited by the has_one and belongs_to association classes
 module DuckRecord::Associations::Builder # :nodoc:
   class SingularAssociation < Association #:nodoc:
+    def self.valid_options(options)
+      super + [:primary_key, :required]
+    end
+
     def self.define_validations(model, reflection)
       super
 
