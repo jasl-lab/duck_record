@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    duck_record (0.0.20)
+    duck_record (0.0.21)
       activemodel (~> 5.0)
       activesupport (~> 5.0)
 
@@ -63,7 +63,7 @@ GEM
     method_source (0.9.0)
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
-    minitest (5.10.3)
+    minitest (5.11.1)
     nio4r (2.2.0)
     nokogiri (1.8.1)
       mini_portile2 (~> 2.3.0)
