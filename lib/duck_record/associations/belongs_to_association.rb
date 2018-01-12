@@ -3,6 +3,10 @@ module DuckRecord
   module Associations
     class BelongsToAssociation < SingularAssociation #:nodoc:
       def replace(record)
+        if owner.class.readonly_attributes.include?(reflection.foreign_key.to_s)
+          return
+        end
+
         if record
           raise_on_type_mismatch!(record)
           replace_keys(record)

@@ -5,6 +5,10 @@ module DuckRecord
       include ForeignAssociation
 
       def replace(record)
+        if owner.class.readonly_attributes.include?(reflection.foreign_key.to_s)
+          return
+        end
+
         raise_on_type_mismatch!(record) if record
         load_target
 
