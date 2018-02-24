@@ -37,6 +37,10 @@ module DuckRecord
       ar._reflections = ar._reflections.merge(name.to_s => reflection)
     end
 
+    def has_reflection?(reflection_name)
+      _reflections.keys.include?(reflection_name.to_s)
+    end
+
     # \Reflection enables the ability to examine the associations and aggregations of
     # Active Record classes and objects. This information, for example,
     # can be used in a form builder that takes an Active Record object

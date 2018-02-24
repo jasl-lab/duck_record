@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    duck_record (0.0.21)
+    duck_record (0.0.22)
       activemodel (~> 5.0)
       activesupport (~> 5.0)
 

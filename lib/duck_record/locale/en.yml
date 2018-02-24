@@ -14,6 +14,7 @@ en:
   duck_record:
     errors:
       messages:
+        record_invalid: "Validation failed: %{errors}"
         # Append your own errors here or at the model/attributes scope.
 
       # You can define own errors for models or model attributes.
