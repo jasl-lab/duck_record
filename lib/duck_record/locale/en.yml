@@ -9,6 +9,7 @@ en:
     messages:
       required: "must exist"
       taken: "has already been taken"
+      subset: "is not included in the list"
 
   # Active Record models configuration
   duck_record:

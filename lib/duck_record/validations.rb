@@ -1,4 +1,5 @@
 require "duck_record/validations/uniqueness_on_real_record"
+require "duck_record/validations/subset"
 
 module DuckRecord
   class RecordInvalid < DuckRecordError
