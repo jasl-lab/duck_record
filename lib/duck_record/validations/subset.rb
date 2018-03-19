@@ -1,11 +1,16 @@
 # frozen_string_literal: true
 
-require "active_model/validations/clusivity"
-
 module DuckRecord
   module Validations
     class SubsetValidator < ActiveModel::EachValidator # :nodoc:
-      include ActiveModel::Validations::Clusivity
+      ERROR_MESSAGE = "An object with the method #include? or a proc, lambda or symbol is required, " \
+                      "and must be supplied as the :in (or :within) option of the configuration hash"
+
+      def check_validity!
+        unless delimiter.respond_to?(:include?) || delimiter.respond_to?(:call) || delimiter.respond_to?(:to_sym)
+          raise ArgumentError, ERROR_MESSAGE
+        end
+      end
 
       def validate_each(record, attribute, value)
         unless subset?(record, value)
@@ -14,6 +19,10 @@ module DuckRecord
       end
 
       private
+
+      def delimiter
+        @delimiter ||= options[:in] || options[:within]
+      end
 
       def subset?(record, value)
         return false unless value.respond_to?(:to_a)
