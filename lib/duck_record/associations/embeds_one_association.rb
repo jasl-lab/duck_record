@@ -31,6 +31,8 @@ module DuckRecord
           self.target =
             if record.is_a? klass
               record
+            elsif record.nil?
+              nil
             elsif record.respond_to?(:to_h)
               build_record(record.to_h)
             end
