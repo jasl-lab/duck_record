@@ -90,9 +90,11 @@ module DuckRecord
       # by scope.scoping { ... } or with_scope { ... } etc, which affects the scope which
       # actually gets built.
       def association_scope
-        if klass
-          @association_scope ||= ActiveRecord::Associations::AssociationScope.scope(self, klass.connection)
-        end
+        return unless klass
+
+        @association_scope ||= ActiveRecord::Associations::AssociationScope.scope(self)
+      rescue ArgumentError
+        @association_scope ||= ActiveRecord::Associations::AssociationScope.scope(self, klass.connection)
       end
 
       def reset_scope
@@ -116,6 +118,8 @@ module DuckRecord
       # Can be overridden (i.e. in ThroughAssociation) to merge in other scopes (i.e. the
       # through association's scope)
       def target_scope
+        ActiveRecord::AssociationRelation.create(klass, self).merge!(klass.all)
+      rescue ArgumentError
         ActiveRecord::AssociationRelation.create(klass, klass.arel_table, klass.predicate_builder, self).merge!(klass.all)
       end
 
