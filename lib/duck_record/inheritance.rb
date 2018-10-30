@@ -111,7 +111,7 @@ module DuckRecord
 
             # Build a list of candidates to search for
             candidates = []
-            name.scan(/::|$/) { candidates.unshift "#{$`}::#{type_name}" }
+            type_name.scan(/::|$/) { candidates.unshift "#{$`}::#{type_name}" }
             candidates << type_name
 
             candidates.each do |candidate|

@@ -144,7 +144,7 @@ module DuckRecord
           begin
             build(item)
           rescue
-            raise_on_type_mismatch!(r)
+            raise_on_type_mismatch!(item)
           end
         end
       end
